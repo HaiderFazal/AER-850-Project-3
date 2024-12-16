@@ -57,7 +57,6 @@ plt.show()
 # Step 2: YOLOv8 Training
 
 data_yaml_path = "/content/drive/MyDrive/AER-850-Project-3/data/data.yaml"
-
 model = YOLO('yolov8n.pt') 
 
 train_results = model.train(
@@ -67,6 +66,7 @@ train_results = model.train(
     imgsz=1000,             
     name='haider_model' 
 )
+
 train_results=model.val(data=data_yaml_path)
 print("Model Successfully Trained")
 
