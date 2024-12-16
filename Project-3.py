@@ -1,3 +1,5 @@
+## Note: Google Colab was used for the entire project
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
