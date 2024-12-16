@@ -5,30 +5,30 @@ from ultralytics import YOLO
 
 #Step 1: Object Masking
 
-image_path = "/content/drive/MyDrive/AER-850-Project-3/motherboard_image.JPEG"
-image_real = cv2.imread(image_path)
+img_path = "/content/drive/MyDrive/AER-850-Project-3/motherboard_image.JPEG"
+img_real = cv2.imread(img_path)
 
-image = cv2.rotate(image_real, cv2.ROTATE_90_CLOCKWISE)
+img = cv2.rotate(img_real, cv2.ROTATE_90_CLOCKWISE)
 
-gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-image_blur = cv2.GaussianBlur(gray_image, (9, 9), 0) 
+blur_img = cv2.GaussianBlur(gray_img, (9, 9), 0) 
 
-_, threshold_image = cv2.threshold(image_blur, 120, 255, cv2.THRESH_BINARY) 
+_, threshold_img = cv2.threshold(blur_img, 120, 255, cv2.THRESH_BINARY) 
 
-edge_detection = cv2.Canny(threshold_image, 50, 150)  
-edge_detection = cv2.dilate(edge_detection, np.ones((5, 5), np.uint8), iterations=1) 
+edge_detect = cv2.Canny(threshold_img, 50, 150)  
+edge_detect = cv2.dilate(edge_detect, np.ones((5, 5), np.uint8), iterations=1) 
 
-contour_detection, _ = cv2.findContours(edge_detection, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+contour_detection, _ = cv2.findContours(edge_detect, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 if contour_detection:
     largest_contour = max(contour_detection, key=cv2.contourArea)
-    mask = np.zeros(gray_image.shape, dtype="uint8")  
+    mask = np.zeros(gray_img.shape, dtype="uint8")  
     cv2.drawContours(mask, [largest_contour], -1, 255, -1) 
 
-    masked_image = cv2.bitwise_and(image, image, mask=mask)
+    masked_img = cv2.bitwise_and(img, img, mask=mask)
 
-    extracted_pcb = cv2.bitwise_and(image, image, mask=mask)
+    extracted_pcb = cv2.bitwise_and(img, img, mask=mask)
     extracted_path = "/content/drive/MyDrive/AER-850-Project-3/extracted_pcb_clean.JPEG"
     cv2.imwrite(extracted_path, extracted_pcb)
 
@@ -38,17 +38,17 @@ else:
 plt.figure(figsize=(15, 5))
 plt.subplot(1, 3, 1)
 plt.title("Original Image")
-plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plt.axis("off")
 
 plt.subplot(1, 3, 2)
 plt.title("Edge Detection")
-plt.imshow(edge_detection, cmap='gray')
+plt.imshow(edge_detect, cmap='gray')
 plt.axis("off")
 
 plt.subplot(1, 3, 3)
 plt.title("Isolated Motherboard")
-plt.imshow(cv2.cvtColor(masked_image, cv2.COLOR_BGR2RGB))
+plt.imshow(cv2.cvtColor(masked_img, cv2.COLOR_BGR2RGB))
 plt.axis("off")
 
 plt.tight_layout()
